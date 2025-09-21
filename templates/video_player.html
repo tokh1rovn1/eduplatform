@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">{{ video.title }}</h1>
+    <video controls class="w-100" style="max-height: 70vh;">
+        <source src="{{ video.video_file.url }}" type="video/mp4">
+        Brauzeringiz video tagini qo'llab-quvvatlamaydi.
+    </video>
+    <a href="{% url 'course_detail' video.course.id %}" class="btn btn-secondary mt-3">Kursga qaytish</a>
+{% endblock %}

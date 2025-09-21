@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Profilim{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Xush kelibsiz, {{ user.username }}!</h1>
+    <p>Sizning rolingiz: <strong>{{ user.get_role_display }}</strong></p>
+    
+    <h2 class="mt-4">Yozilgan kurslarim</h2>
+    <div class="list-group">
+        {% for enrollment in enrolled_courses %}
+            <a href="{% url 'course_detail' enrollment.course.id %}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ enrollment.course.title }}</h5>
+                    <small>O'qituvchi: {{ enrollment.teacher_name }}</small>
+                </div>
+                <p class="mb-1">Ko'rilgan videolar: {{ enrollment.viewed_count }} / {{ enrollment.total_videos }}</p>
+            </a>
+        {% empty %}
+            <div class="list-group-item">Siz hali hech qanday kursga yozilmagansiz.</div>
+        {% endfor %}
+    </div>
+{% endblock %}

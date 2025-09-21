@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Barcha kurslar{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Kategoriyalar
+                </div>
+                <ul class="list-group list-group-flush">
+                    <a href="{% url 'course_list' %}" class="list-group-item list-group-item-action">
+                        Barcha kurslar
+                    </a>
+                    {% for category in categories %}
+                        <a href="{% url 'courses_by_category' slug=category.slug %}" class="list-group-item list-group-item-action">
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <h1 class="mb-4">Kurslar</h1>
+            <div class="row">
+                {% for course in courses %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.title }}</h5>
+                                <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                                <p class="card-text"><small class="text-muted">O'qituvchi: {{ course.teacher }}</small></p>
+                                <p class="card-text"><small class="text-muted">Kategoriya: {{ course.category.name }}</small></p>
+                                <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">Batafsil</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <p class="alert alert-info">Bu kategoriyada kurslar mavjud emas.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

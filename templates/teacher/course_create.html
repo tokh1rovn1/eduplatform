@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Kurs yaratish{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h1 class="mb-4">Yangi kurs yaratish</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Yaratish</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

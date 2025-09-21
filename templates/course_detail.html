@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="mb-3">{{ course.title }}</h1>
+            <p class="lead">{{ course.description }}</p>
+            <p><strong>O'qituvchi:</strong> {{ course.teacher }}</p>
+            <p><strong>Kategoriya:</strong> {{ course.category }}</p>
+            <p><strong>O'rtacha baho:</strong> {{ average_rating|floatformat:2|default:"Baho berilmagan" }}</p>
+
+            {% if not is_enrolled and user.is_authenticated and user.role == 'student' %}
+                <form method="post" action="{% url 'enroll_course' course.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Kursga yozilish</button>
+                </form>
+            {% elif is_enrolled %}
+                <div class="alert alert-info">Siz bu kursga yozilgansiz.</div>
+            {% endif %}
+
+            <h3 class="mt-4">Kursdagi videolar</h3>
+            <ul class="list-group">
+                {% for video in videos %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ video.title }}
+                        {% if is_enrolled %}
+                            <a href="{% url 'view_video' video.id %}" class="btn btn-sm btn-primary">Videoni ko'rish</a>
+                        {% else %}
+                             <span class="badge bg-secondary">Yozilmagan</span>
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Hali videolar qo'shilmagan.</li>
+                {% endfor %}
+            </ul>
+
+            {% if is_enrolled %}
+                <h3 class="mt-4">Kursga baho berish</h3>
+                <form method="post" action="{% url 'rate_course' course.id %}">
+                    {% csrf_token %}
+                    {{ rating_form.as_p }}
+                    <button type="submit" class="btn btn-info">Baho berish</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
