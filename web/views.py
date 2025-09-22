@@ -14,7 +14,7 @@ from .forms import UserRegisterForm, CourseForm, VideoForm, RatingForm,CategoryF
 from api.models import User, Category, Course, Video, Enrollment, Rating, ViewedVideo
 
 
-# --- Autentifikatsiya views'lari ---
+# Autentifikatsiya views'lari
 def register_request(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -68,7 +68,7 @@ def logout_request(request):
     return redirect('home')
 
 
-# --- Admin views'lari ---
+#admin ucun viewslarr
 class AdminDashboardView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         return self.request.user.role == 'admin'
@@ -93,7 +93,7 @@ class CategoryListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return self.request.user.role == 'admin'
 
 
-# --- Teacher views'lari ---
+# Techer ucun viewslaa
 class TeacherDashboardView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Course
     template_name = 'teacher/dashboard.html'
@@ -153,7 +153,7 @@ class VideoCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return super().form_valid(form)
 
 
-# --- Student views'lari ---
+#Studentni viewslari
 class StudentProfileView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = User
     template_name = 'student/profile.html'
@@ -214,19 +214,10 @@ class CourseDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         course = self.get_object()
-
-        # Videolar ro'yxatini olish
         context['videos'] = course.videos.all()
-
-        # Reyting formasini qo'shish
         context['rating_form'] = RatingForm()
-
-        # O'rtacha bahoni xatosiz hisoblash
-        # .get() metodi orqali, agar kalit mavjud bo'lmasa, None qaytaradi
         rating_data = Rating.objects.filter(course=course).aggregate(avg_rating=Avg('rating'))
         context['average_rating'] = rating_data.get('avg_rating', None)
-
-        # Talaba kursga yozilganligini tekshirish
         is_enrolled = False
         if self.request.user.is_authenticated and self.request.user.role == 'student':
             is_enrolled = Enrollment.objects.filter(student=self.request.user, course=course).exists()
@@ -290,6 +281,4 @@ class CategoryCreateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessage
         return self.request.user.is_authenticated and self.request.user.role == 'admin'
 
     def form_valid(self, form):
-        # Asosiy sinfning form_valid metodini chaqirish muhim.
-        # Bu metod formani saqlaydi va self.object ni o'rnatadi.
         return super().form_valid(form)

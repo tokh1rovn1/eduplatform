@@ -11,8 +11,7 @@ from .serializers import (
     VideoSerializer, EnrollmentSerializer, StudentProfileSerializer, RatingSerializer
 )
 
-# ---
-## Authentication and Registration
+
 class UserRegistrationView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
     permission_classes = [permissions.AllowAny]
@@ -22,8 +21,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = [permissions.AllowAny]
 
 
-# ---
-## Admin API'lari
 class AdminDashboardView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -57,8 +54,6 @@ class StudentListAPIView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
 
-# ---
-## Teacher API'lari
 class TeacherDashboardView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -103,8 +98,6 @@ class CourseVideoCreateView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# ---
-## Student va Umumiy API'lar
 class CourseListView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer

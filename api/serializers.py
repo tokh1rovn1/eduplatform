@@ -1,4 +1,3 @@
-# api/serializers.py
 from rest_framework import serializers
 from .models import User, Category, Course, Video, Enrollment, Rating, ViewedVideo
 

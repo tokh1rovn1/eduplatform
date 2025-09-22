@@ -1,9 +1,7 @@
-# api/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User, Category, Course, Video, Enrollment, Rating, ViewedVideo
 
-# User modelini admin panelda ko'rsatish
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     fieldsets = BaseUserAdmin.fieldsets + (
@@ -12,7 +10,6 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('username', 'email', 'role', 'is_staff', 'is_active',)
     list_filter = ('role', 'is_staff', 'is_active',)
 
-# Boshqa modellarni admin panelda ro'yxatdan o'tkazish
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug',)
