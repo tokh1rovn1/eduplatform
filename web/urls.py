@@ -24,8 +24,8 @@ path('admin/category/create/', views.CategoryCreateView.as_view(), name='admin_c
 
     # Teacher
     path('teacher/dashboard/', views.TeacherDashboardView.as_view(), name='teacher_dashboard'),
-    path('teacher/course/create/', views.CourseCreateView.as_view(), name='course_create'),
-    path('teacher/course/<int:course_id>/video/add/', views.VideoCreateView.as_view(), name='video_add'),
+    path('teacher/courses/create/', views.CourseCreateView.as_view(), name='course_create'),
+    path('teacher/courses/<int:course_id>/video/add/', views.VideoCreateView.as_view(), name='video_add'),
 
     # Student
     path('student/profile/', views.StudentProfileView.as_view(), name='student_profile'),
