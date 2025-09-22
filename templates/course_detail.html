@@ -3,47 +3,63 @@
 {% block title %}{{ course.title }}{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-8">
-            <h1 class="mb-3">{{ course.title }}</h1>
-            <p class="lead">{{ course.description }}</p>
-            <p><strong>O'qituvchi:</strong> {{ course.teacher }}</p>
-            <p><strong>Kategoriya:</strong> {{ course.category }}</p>
-            <p><strong>O'rtacha baho:</strong> {{ average_rating|floatformat:2|default:"Baho berilmagan" }}</p>
+<div class="row">
+    <div class="col-md-8">
+        <!-- Kurs nomi -->
+        <h1 class="mb-3 fw-bold">{{ course.title }}</h1>
+        <p class="lead text-muted">{{ course.description }}</p>
 
-            {% if not is_enrolled and user.is_authenticated and user.role == 'student' %}
-                <form method="post" action="{% url 'enroll_course' course.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success">Kursga yozilish</button>
-                </form>
-            {% elif is_enrolled %}
-                <div class="alert alert-info">Siz bu kursga yozilgansiz.</div>
-            {% endif %}
+        <!-- Kurs ma'lumotlari -->
+        <ul class="list-unstyled mb-3">
+            <li><i class="bi bi-person-fill me-2"></i> <strong>O'qituvchi:</strong> {{ course.teacher }}</li>
+            <li><i class="bi bi-tags-fill me-2"></i> <strong>Kategoriya:</strong> {{ course.category }}</li>
+            <li><i class="bi bi-star-fill me-2 text-warning"></i> <strong>O'rtacha baho:</strong> {{ average_rating|floatformat:2|default:"Baho berilmagan" }}</li>
+        </ul>
 
-            <h3 class="mt-4">Kursdagi videolar</h3>
-            <ul class="list-group">
-                {% for video in videos %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ video.title }}
-                        {% if is_enrolled %}
-                            <a href="{% url 'view_video' video.id %}" class="btn btn-sm btn-primary">Videoni ko'rish</a>
-                        {% else %}
-                             <span class="badge bg-secondary">Yozilmagan</span>
-                        {% endif %}
-                    </li>
-                {% empty %}
-                    <li class="list-group-item">Hali videolar qo'shilmagan.</li>
-                {% endfor %}
-            </ul>
+        <!-- Kursga yozilish tugmasi -->
+        {% if not is_enrolled and user.is_authenticated and user.role == 'student' %}
+            <form method="post" action="{% url 'enroll_course' course.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success mb-3">
+                    <i class="bi bi-pencil-square me-2"></i> Kursga yozilish
+                </button>
+            </form>
+        {% elif is_enrolled %}
+            <div class="alert alert-info d-flex align-items-center mb-3">
+                <i class="bi bi-info-circle-fill me-2"></i> Siz bu kursga yozilgansiz.
+            </div>
+        {% endif %}
 
-            {% if is_enrolled %}
-                <h3 class="mt-4">Kursga baho berish</h3>
-                <form method="post" action="{% url 'rate_course' course.id %}">
-                    {% csrf_token %}
-                    {{ rating_form.as_p }}
-                    <button type="submit" class="btn btn-info">Baho berish</button>
-                </form>
-            {% endif %}
-        </div>
+        <!-- Videolar ro'yxati -->
+        <h3 class="mt-4 mb-3 fw-semibold">Kursdagi videolar</h3>
+        <ul class="list-group mb-4">
+            {% for video in videos %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <i class="bi bi-play-circle-fill me-2 text-primary"></i> {{ video.title }}
+                    {% if is_enrolled %}
+                        <a href="{% url 'view_video' video.id %}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-eye-fill me-1"></i> Videoni ko'rish
+                        </a>
+                    {% else %}
+                        <span class="badge bg-secondary"><i class="bi bi-lock-fill me-1"></i> Yozilmagan</span>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">Hali videolar qo'shilmagan.</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Kursga baho berish -->
+        {% if is_enrolled %}
+            <h3 class="mt-4 mb-3 fw-semibold">Kursga baho berish</h3>
+            <form method="post" action="{% url 'rate_course' course.id %}">
+                {% csrf_token %}
+                {{ rating_form.as_p }}
+                <button type="submit" class="btn btn-info">
+                    <i class="bi bi-star-fill me-2"></i> Baho berish
+                </button>
+            </form>
+        {% endif %}
     </div>
+</div>
 {% endblock %}

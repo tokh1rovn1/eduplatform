@@ -3,48 +3,62 @@
 {% block title %}Barcha kurslar{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <!-- Kategoriyalar bo'limi -->
-        <div class="col-12 col-md-3 mb-4 mb-md-0">
-            <div class="card">
-                <div class="card-header">
-                    Kategoriyalar
-                </div>
-                <ul class="list-group list-group-flush">
-                    <a href="{% url 'course_list' %}" class="list-group-item list-group-item-action">
-                        Barcha kurslar
+<div class="row">
+    <!-- Kategoriyalar paneli -->
+    <div class="col-md-3 mb-4">
+        <div class="card p-3 shadow-sm">
+            <h5 class="mb-3 fw-semibold"><i class="bi bi-list-ul me-2"></i> Kategoriyalar</h5>
+            <ul class="list-group list-group-flush">
+                <a href="{% url 'course_list' %}" class="list-group-item list-group-item-action">
+                    <i class="bi bi-box-seam me-1"></i> Barcha kurslar
+                </a>
+                {% for category in categories %}
+                    <a href="{% url 'courses_by_category' slug=category.slug %}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-tag-fill me-1"></i> {{ category.name }}
                     </a>
-                    {% for category in categories %}
-                        <a href="{% url 'courses_by_category' slug=category.slug %}" class="list-group-item list-group-item-action">
-                            {{ category.name }}
-                        </a>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-
-        <!-- Kurslar bo'limi -->
-        <div class="col-12 col-md-9">
-            <h1 class="mb-4">Kurslar</h1>
-            <div class="row">
-                {% for course in courses %}
-                    <div class="col-12 col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ course.title }}</h5>
-                                <p class="card-text">{{ course.description|truncatewords:20 }}</p>
-                                <p class="card-text"><small class="text-muted">O'qituvchi: {{ course.teacher }}</small></p>
-                                <p class="card-text"><small class="text-muted">Kategoriya: {{ course.category.name }}</small></p>
-                                <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">Batafsil</a>
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    <div class="col-12">
-                        <p class="alert alert-info">Bu kategoriyada kurslar mavjud emas.</p>
-                    </div>
                 {% endfor %}
-            </div>
+            </ul>
         </div>
     </div>
+
+    <!-- Kurslar ro'yxati -->
+    <div class="col-md-9">
+        <h2 class="mb-4 fw-semibold"><i class="bi bi-journal-bookmark-fill me-2"></i> Kurslar</h2>
+        <div class="row">
+            {% for course in courses %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 p-3 shadow-sm hover-card">
+                        <h5 class="fw-bold mb-2"><i class="bi bi-mortarboard-fill me-1"></i> {{ course.title }}</h5>
+                        <p class="text-muted">{{ course.description|truncatewords:20 }}</p>
+                        <p class="text-muted small"><i class="bi bi-person-fill me-1"></i> {{ course.teacher }}</p>
+                        <p class="text-muted small"><i class="bi bi-tags-fill me-1"></i> {{ course.category.name }}</p>
+                        <a href="{% url 'course_detail' course.id %}" class="btn btn-primary btn-sm mt-2">
+                            <i class="bi bi-eye-fill me-1"></i> Batafsil
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="alert alert-info d-flex align-items-center">
+                        <i class="bi bi-info-circle-fill me-2"></i> Bu kategoriyada kurslar mavjud emas.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Card hover animatsiyasi */
+.hover-card {
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #fff;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.08);
+}
+</style>
 {% endblock %}
