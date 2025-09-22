@@ -23,7 +23,7 @@ urlpatterns = [
     # Teacher yo'llari
     path('teacher/dashboard/', TeacherDashboardView.as_view(), name='teacher-dashboard'),
     path('teacher/courses/', TeacherCourseListCreateView.as_view(), name='teacher-courses-list-create'),
-    path('teacher/courses/<int:course_id>/videos/', CourseVideoCreateView.as_view(),
+    path('teacher/courses/<int:course_id>/add/', CourseVideoCreateView.as_view(),
          name='teacher-course-video-create'),
 
     # Student va Umumiy yo'llar
