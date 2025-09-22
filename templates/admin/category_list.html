@@ -3,27 +3,74 @@
 {% block title %}Kategoriyalar{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Kategoriyalar</h1>
-    <a href="#" class="btn btn-primary mb-3">Yangi Kategoriya Yaratish</a> <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Nomi</th>
-                <th>Slug</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for category in category_list %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ category.name }}</td>
-                <td>{{ category.slug }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3">Kategoriyalar mavjud emas.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container">
+    <!-- Sarlavha va Yaratish tugmasi -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold"><i class="bi bi-tags-fill me-2 text-primary"></i> Kategoriyalar</h1>
+        <a href="{% url 'category_add' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Yangi Kategoriya Yaratish
+        </a>
+    </div>
+
+    <!-- Kategoriyalar jadvali -->
+    <div class="card shadow-sm rounded">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nomi</th>
+                        <th>Slug</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in category_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><i class="bi bi-tag-fill me-1 text-secondary"></i> {{ category.name }}</td>
+                        <td>{{ category.slug }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-3">
+                            <i class="bi bi-info-circle me-1"></i> Kategoriyalar mavjud emas.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Table hover effekt */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 113, 227, 0.1);
+    transform: translateY(-1px);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Button hover */
+.btn-primary {
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Card styling */
+.card {
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+</style>
 {% endblock %}

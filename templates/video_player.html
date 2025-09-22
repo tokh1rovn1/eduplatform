@@ -3,10 +3,41 @@
 {% block title %}{{ video.title }}{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">{{ video.title }}</h1>
-    <video controls class="w-100" style="max-height: 70vh;">
-        <source src="{{ video.video_file.url }}" type="video/mp4">
-        Brauzeringiz video tagini qo'llab-quvvatlamaydi.
-    </video>
-    <a href="{% url 'course_detail' video.course.id %}" class="btn btn-secondary mt-3">Kursga qaytish</a>
+<div class="container">
+    <!-- Video sarlavhasi -->
+    <h1 class="mb-4 fw-bold"><i class="bi bi-play-circle-fill me-2 text-primary"></i> {{ video.title }}</h1>
+
+    <!-- Video player -->
+    <div class="ratio ratio-16x9 mb-3 shadow-sm rounded">
+        <video controls class="w-100 h-100 rounded" style="object-fit: cover;">
+            <source src="{{ video.video_file.url }}" type="video/mp4">
+            Brauzeringiz video tagini qo'llab-quvvatlamaydi.
+        </video>
+    </div>
+
+    <!-- Kursga qaytish tugmasi -->
+    <a href="{% url 'course_detail' video.course.id %}" class="btn btn-secondary btn-lg mt-2">
+        <i class="bi bi-arrow-left-circle me-2"></i> Kursga qaytish
+    </a>
+</div>
+
+<style>
+/* Button hover effekti */
+.btn-secondary {
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Video container shadow */
+.ratio {
+    background-color: #000;
+    overflow: hidden;
+    border-radius: 12px;
+}
+</style>
 {% endblock %}

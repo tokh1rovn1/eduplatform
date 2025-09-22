@@ -3,80 +3,131 @@
 {% block title %}Admin Paneli{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Admin Boshqaruv Paneli</h1>
+<div class="container">
 
-    <a href="{% url 'admin_category_create' %}" class="btn btn-success mb-4">
-        <i class="fas fa-plus-circle"></i> Yangi Kategoriya Qo'shish
-    </a>
+    <!-- Sarlavha -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold"><i class="bi bi-speedometer2 me-2 text-primary"></i> Admin Boshqaruv Paneli</h1>
+        <a href="{% url 'admin_category_create' %}" class="btn btn-success btn-lg">
+            <i class="bi bi-plus-circle me-1"></i> Yangi Kategoriya Qo'shish
+        </a>
+    </div>
 
-    <div class="row">
+    <!-- Statistika kartalari -->
+    <div class="row g-4 mb-4">
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">O'qituvchilar</div>
-                <div class="card-body">
-                    <h5 class="card-title">Jami: {{ total_teachers }}</h5>
+            <div class="card text-white bg-primary shadow-sm hover-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-2"><i class="bi bi-person-badge-fill me-2"></i> O'qituvchilar</h5>
+                    <h3 class="fw-bold">{{ total_teachers }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-header">Talabalar</div>
-                <div class="card-body">
-                    <h5 class="card-title">Jami: {{ total_students }}</h5>
+            <div class="card text-white bg-success shadow-sm hover-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-2"><i class="bi bi-people-fill me-2"></i> Talabalar</h5>
+                    <h3 class="fw-bold">{{ total_students }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-header">Kurslar</div>
-                <div class="card-body">
-                    <h5 class="card-title">Jami: {{ total_courses }}</h5>
+            <div class="card text-white bg-info shadow-sm hover-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-2"><i class="bi bi-journal-bookmark-fill me-2"></i> Kurslar</h5>
+                    <h3 class="fw-bold">{{ total_courses }}</h3>
                 </div>
             </div>
         </div>
     </div>
-    
-    <h2 class="mt-4">O'qituvchilar Ro'yxati</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for teacher in teachers %}
-            <tr>
-                <td>{{ teacher.username }}</td>
-                <td>{{ teacher.email }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="2">O'qituvchilar mavjud emas.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
-    <h2 class="mt-4">Talabalar Ro'yxati</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in students %}
-            <tr>
-                <td>{{ student.username }}</td>
-                <td>{{ student.email }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="2">Talabalar mavjud emas.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- O'qituvchilar ro'yxati -->
+    <div class="mb-5">
+        <h2 class="fw-semibold mb-3"><i class="bi bi-person-badge me-2"></i> O'qituvchilar Ro'yxati</h2>
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td><i class="bi bi-person-fill me-1 text-secondary"></i> {{ teacher.username }}</td>
+                        <td>{{ teacher.email }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center text-muted py-3">
+                            <i class="bi bi-info-circle me-1"></i> O'qituvchilar mavjud emas.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Talabalar ro'yxati -->
+    <div class="mb-5">
+        <h2 class="fw-semibold mb-3"><i class="bi bi-people-fill me-2"></i> Talabalar Ro'yxati</h2>
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td><i class="bi bi-person-fill me-1 text-secondary"></i> {{ student.username }}</td>
+                        <td>{{ student.email }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center text-muted py-3">
+                            <i class="bi bi-info-circle me-1"></i> Talabalar mavjud emas.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Hover effektlar kartalar va table uchun */
+.hover-card {
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+}
+
+/* Table hover effekt */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 113, 227, 0.05);
+    transform: translateY(-1px);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Buttons hover */
+.btn-success, .btn-primary {
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-success:hover, .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+</style>
 {% endblock %}

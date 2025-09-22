@@ -3,15 +3,58 @@
 {% block title %}Kategoriya Qo'shish{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Yangi Kategoriya Qo'shish</h1>
+<div class="container">
+    <!-- Sarlavha -->
+    <h1 class="mb-4 fw-bold"><i class="bi bi-plus-circle-fill me-2 text-primary"></i> Yangi Kategoriya Qo'shish</h1>
+
     <div class="row">
         <div class="col-md-6">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Yaratish</button>
-                <a href="{% url 'admin_categories' %}" class="btn btn-secondary">Bekor qilish</a>
-            </form>
+            <div class="card p-4 shadow-sm rounded">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> Yaratish
+                        </button>
+                        <a href="{% url 'admin_categories' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-1"></i> Bekor qilish
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+</div>
+
+<style>
+/* Buttons hover effekti */
+.btn-primary, .btn-secondary {
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* Card styling */
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.08);
+}
+</style>
 {% endblock %}

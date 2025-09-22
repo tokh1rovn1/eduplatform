@@ -3,22 +3,72 @@
 {% block title %}Kirish{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-5">
     <div class="col-md-6">
-        <div class="card p-4">
-            <h2 class="text-center mb-4">Tizimga kirish</h2>
+        <div class="card p-4 shadow-sm rounded">
+
+            <!-- Sarlavha -->
+            <h2 class="text-center mb-4 fw-bold">
+                <i class="bi bi-box-arrow-in-right me-2 text-primary"></i> Tizimga kirish
+            </h2>
+
+            <!-- Xato xabar -->
             {% if error_message %}
-                <div class="alert alert-danger">{{ error_message }}</div>
+                <div class="alert alert-danger d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error_message }}
+                </div>
             {% endif %}
+
+            <!-- Login form -->
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Kirish</button>
+                <div class="d-grid mt-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-door-open me-1"></i> Kirish
+                    </button>
                 </div>
             </form>
-            <p class="text-center mt-3">Akkauntingiz yo'qmi? <a href="{% url 'register' %}">Ro'yxatdan o'tish</a></p>
+
+            <!-- Ro'yxatdan o'tish linki -->
+            <p class="text-center mt-3">
+                Akkauntingiz yo'qmi?
+                <a href="{% url 'register' %}" class="text-primary fw-semibold">
+                    Ro'yxatdan o'tish
+                </a>
+            </p>
+
         </div>
     </div>
 </div>
+
+<style>
+/* Card shadow va hover effekti */
+.card {
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #fff;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.08);
+}
+
+/* Button hover effekt */
+.btn-primary {
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Alert icon styling */
+.alert i {
+    font-size: 1.2rem;
+}
+</style>
 {% endblock %}
