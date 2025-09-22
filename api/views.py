@@ -25,7 +25,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 # ---
 ## Admin API'lari
 class AdminDashboardView(APIView):
-    permission_classes = [permissions.IsAdminUser]  # faqat adminlar
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         data = {
@@ -42,31 +42,28 @@ class AdminDashboardView(APIView):
 class AdminCategoryListCreateView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAdminUser]  # faqat admin
+    permission_classes = [permissions.AllowAny]
 
 
 class TeacherListAPIView(generics.ListAPIView):
     queryset = User.objects.filter(role='teacher')
     serializer_class = UserRegistrationSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
 
 
 class StudentListAPIView(generics.ListAPIView):
     queryset = User.objects.filter(role='student')
     serializer_class = UserRegistrationSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
 
 
 # ---
 ## Teacher API'lari
 class TeacherDashboardView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        if request.user.role != 'teacher':
-            return Response({'error': 'Only teachers can view this dashboard'}, status=403)
-
-        courses = Course.objects.filter(teacher=request.user)
+        courses = Course.objects.filter(teacher=request.user) if request.user.is_authenticated else Course.objects.none()
         course_data = []
         for course in courses:
             students_count = Enrollment.objects.filter(course=course).count()
@@ -83,32 +80,26 @@ class TeacherDashboardView(APIView):
 
 class TeacherCourseListCreateView(generics.ListCreateAPIView):
     serializer_class = CourseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Course.objects.filter(teacher=self.request.user)
+        if self.request.user.is_authenticated:
+            return Course.objects.filter(teacher=self.request.user)
+        return Course.objects.none()
 
     def perform_create(self, serializer):
-        if self.request.user.role != 'teacher':
-            raise PermissionError("Only teachers can create courses")
-        serializer.save(teacher=self.request.user)
+        serializer.save(teacher=self.request.user if self.request.user.is_authenticated else None)
 
 
 class CourseVideoCreateView(generics.CreateAPIView):
     serializer_class = VideoSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         course = get_object_or_404(Course, pk=self.kwargs.get('course_id'))
-
-        if request.user != course.teacher:
-            return Response({'error': 'You do not have permission to add videos to this course.'},
-                            status=status.HTTP_403_FORBIDDEN)
-
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(course=course)
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -121,42 +112,36 @@ class CourseListView(generics.ListAPIView):
 
 
 class CourseEnrollmentView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, course_id):
-        if request.user.role != 'student':
-            return Response({'error': 'Only students can enroll.'}, status=403)
-
         course = get_object_or_404(Course, pk=course_id)
 
         if Enrollment.objects.filter(student=request.user, course=course).exists():
             return Response({'error': 'You are already enrolled in this course.'}, status=400)
 
-        Enrollment.objects.create(student=request.user, course=course)
+        Enrollment.objects.create(student=request.user if request.user.is_authenticated else None, course=course)
         return Response({'message': 'Successfully enrolled in the course.'}, status=201)
 
 
 class StudentProfileView(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = StudentProfileSerializer
 
     def get_object(self):
-        return self.request.user
+        return self.request.user if self.request.user.is_authenticated else None
 
 
 class CourseRatingView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, course_id):
-        if request.user.role != 'student':
-            return Response({'error': 'Only students can rate courses.'}, status=403)
-
         course = get_object_or_404(Course, pk=course_id)
         serializer = RatingSerializer(data=request.data)
 
         if serializer.is_valid():
             rating_instance, created = Rating.objects.get_or_create(
-                student=request.user,
+                student=request.user if request.user.is_authenticated else None,
                 course=course,
                 defaults={'rating': serializer.validated_data['rating'],
                           'comment': serializer.validated_data.get('comment')}
