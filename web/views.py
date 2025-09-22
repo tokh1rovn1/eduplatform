@@ -23,9 +23,16 @@ def register_request(request):
             login(request, user)
             messages.success(request, 'Muvaffaqiyatli ro\'yxatdan o\'tdingiz!')
             if user.role == 'student':
+                # Talaba profiliga yo'naltirish
                 return redirect('student_profile')
             elif user.role == 'teacher':
+                # O'qituvchi dashboardiga yo'naltirish
                 return redirect('teacher_dashboard')
+            elif user.role == 'admin':
+                # Admin dashboardiga yo'naltirish
+                return redirect('admin_dashboard')
+
+            # Agar yuqoridagi rollardan biri bo'lmasa, bosh sahifaga yo'naltirish
             return redirect('home')
     else:
         form = UserRegisterForm()
